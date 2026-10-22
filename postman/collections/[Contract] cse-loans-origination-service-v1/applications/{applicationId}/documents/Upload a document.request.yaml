@@ -1,0 +1,197 @@
+type: http
+name: Upload a document
+url: '{{baseUrl}}/applications/:applicationId/documents'
+method: POST
+headers:
+  - key: Content-Type
+    value: multipart/form-data
+  - key: Accept
+    value: application/json
+pathVariables:
+  - key: applicationId
+    value: string
+body:
+  type: formdata
+  content:
+    - key: file
+      type: file
+    - key: documentType
+      value: income_verification
+      type: text
+scripts:
+  - type: afterResponse
+    code:
+      - var contract = JSON.parse("{\"method\":\"POST\",\"path\":\"/applications/{applicationId}/documents\",\"responses\":{\"201\":{\"content\":{\"application/json\":{\"schema\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\"},\"applicationId\":{\"type\":\"string\"},\"documentType\":{\"type\":\"string\"},\"fileName\":{\"type\":\"string\"},\"uploadedAt\":{\"type\":\"string\"},\"verificationStatus\":{\"type\":\"string\",\"enum\":[\"pending\",\"verified\",\"rejected\"]}},\"$schema\":\"http://json-schema.org/draft-07/schema#\"}}},\"hasBody\":true,\"headers\":[]},\"400\":{\"content\":{},\"hasBody\":false,\"headers\":[]}}}");
+      - var validators = {};
+      - validators["201"] = validators["201"] || {};
+      - |-
+        validators["201"]["application/json"] = (function() {
+        'use strict'
+        const hasOwn = Function.prototype.call.bind(Object.prototype.hasOwnProperty);
+        const ref0 = function validate(data) {
+          validate.errors = null
+          let errorCount = 0
+          if (!(typeof data === "object" && data && !Array.isArray(data))) {
+            if (validate.errors === null) validate.errors = []
+            validate.errors.push({ keywordLocation: "#/type", instanceLocation: "#" })
+            errorCount++
+          }
+          else {
+            if (data.id !== undefined && hasOwn(data, "id")) {
+              if (!(typeof data.id === "string")) {
+                if (validate.errors === null) validate.errors = []
+                validate.errors.push({ keywordLocation: "#/properties/id/type", instanceLocation: "#/id" })
+                errorCount++
+              }
+            }
+            if (data.applicationId !== undefined && hasOwn(data, "applicationId")) {
+              if (!(typeof data.applicationId === "string")) {
+                if (validate.errors === null) validate.errors = []
+                validate.errors.push({ keywordLocation: "#/properties/applicationId/type", instanceLocation: "#/applicationId" })
+                errorCount++
+              }
+            }
+            if (data.documentType !== undefined && hasOwn(data, "documentType")) {
+              if (!(typeof data.documentType === "string")) {
+                if (validate.errors === null) validate.errors = []
+                validate.errors.push({ keywordLocation: "#/properties/documentType/type", instanceLocation: "#/documentType" })
+                errorCount++
+              }
+            }
+            if (data.fileName !== undefined && hasOwn(data, "fileName")) {
+              if (!(typeof data.fileName === "string")) {
+                if (validate.errors === null) validate.errors = []
+                validate.errors.push({ keywordLocation: "#/properties/fileName/type", instanceLocation: "#/fileName" })
+                errorCount++
+              }
+            }
+            if (data.uploadedAt !== undefined && hasOwn(data, "uploadedAt")) {
+              if (!(typeof data.uploadedAt === "string")) {
+                if (validate.errors === null) validate.errors = []
+                validate.errors.push({ keywordLocation: "#/properties/uploadedAt/type", instanceLocation: "#/uploadedAt" })
+                errorCount++
+              }
+            }
+            if (data.verificationStatus !== undefined && hasOwn(data, "verificationStatus")) {
+              if (!(typeof data.verificationStatus === "string")) {
+                if (validate.errors === null) validate.errors = []
+                validate.errors.push({ keywordLocation: "#/properties/verificationStatus/type", instanceLocation: "#/verificationStatus" })
+                errorCount++
+              }
+              else {
+                if (!(data.verificationStatus === "pending" || data.verificationStatus === "verified" || data.verificationStatus === "rejected")) {
+                  if (validate.errors === null) validate.errors = []
+                  validate.errors.push({ keywordLocation: "#/properties/verificationStatus/enum", instanceLocation: "#/verificationStatus" })
+                  errorCount++
+                }
+              }
+            }
+          }
+          return errorCount === 0
+        };
+        return ref0})();;
+      - validators["400"] = validators["400"] || {};
+      - function selectedResponseContract() {
+      - '  var status = String(pm.response.code);'
+      - '  if (contract.responses[status]) return { key: status, value: contract.responses[status] };'
+      - '  var range = String(Math.floor(pm.response.code / 100)) + ''XX'';'
+      - '  if (contract.responses[range]) return { key: range, value: contract.responses[range] };'
+      - '  if (contract.responses.default) return { key: ''default'', value: contract.responses.default };'
+      - '  return null;'
+      - '}'
+      - function responseText() { return pm.response.text() || ""; }
+      - function isBodyless() { return pm.response.code === 204 || pm.response.code === 205 || pm.response.code === 304 || contract.method === "HEAD"; }
+      - function mediaBase(value) { return String(value || "").toLowerCase().split(";")[0].trim(); }
+      - 'function mediaParts(value) { var base = mediaBase(value); var parts = base.split("/"); return { raw: base, type: parts[0] || "", subtype: parts[1] || "" }; }'
+      - function isJsonSubtype(subtype) { return subtype === "json" || /\+json$/.test(subtype); }
+      - function mediaScore(expected, actual) {
+      - '  var e = mediaParts(expected); var a = mediaParts(actual);'
+      - '  if (!e.raw || !a.raw) return 0;'
+      - '  if (e.raw === a.raw) return 4;'
+      - '  if (e.type === a.type && e.subtype === "json" && isJsonSubtype(a.subtype)) return 3;'
+      - '  if (e.type === a.type && e.subtype === "*+json" && /\+json$/.test(a.subtype)) return 3;'
+      - '  if (e.type === a.type && e.subtype === "*") return 2;'
+      - '  if (e.type === "*" && e.subtype === "*") return 1;'
+      - '  return 0;'
+      - '}'
+      - function selectMedia(responseContract) {
+      - '  var actual = pm.response.headers.get("Content-Type") || "";'
+      - '  var content = responseContract.content || {};'
+      - '  var matches = Object.keys(content).map(function (expected) { return { expected: expected, score: mediaScore(expected, actual), media: content[expected] }; }).filter(function (entry) { return entry.score > 0; }).sort(function (a, b) { return b.score - a.score; });'
+      - '  if (matches.length === 0) return { error: "Content-Type " + actual + " does not match OpenAPI content for " + contract.method + " " + contract.path + " status " + pm.response.code + "; expected " + Object.keys(content).join(", ") };'
+      - '  if (matches.length > 1 && matches[0].score === matches[1].score) return { error: "Content-Type " + actual + " ambiguously matches OpenAPI content for " + contract.method + " " + contract.path + " status " + pm.response.code + "; expected " + Object.keys(content).join(", ") };'
+      - '  return matches[0];'
+      - '}'
+      - var selected = selectedResponseContract();
+      - pm.test('OpenAPI operation mapping exists', function () { pm.expect(contract.path).to.be.a('string').and.not.empty; });
+      - pm.test('Status code is defined by OpenAPI', function () { pm.expect(selected, 'No OpenAPI response defined for ' + contract.method + ' ' + contract.path + ' status ' + pm.response.code).to.exist; });
+      - pm.test('Response headers match OpenAPI', function () {
+      - '  if (!selected) return;'
+      - '  var headers = selected.value.headers || [];'
+      - '  headers.forEach(function (header) {'
+      - '    var actual = pm.response.headers.get(header.name);'
+      - '    if (!actual && header.required) pm.expect.fail("OpenAPI response header missing for " + contract.method + " " + contract.path + ": " + header.name);'
+      - '    if (!actual) return;'
+      - '    if (header.unsupported) pm.expect.fail("OpenAPI response header unsupported for " + contract.method + " " + contract.path + ": " + header.unsupported);'
+      - '    var headerValidator = validators[selected.key] && validators[selected.key].__headers && validators[selected.key].__headers[String(header.name).toLowerCase()];'
+      - '    if (headerValidator && !headerValidator(actual)) pm.expect.fail("OpenAPI response header validation failed for " + header.name + ": " + JSON.stringify(headerValidator.errors || []));'
+      - '  });'
+      - '});'
+      - pm.test('Response body matches OpenAPI body contract', function () {
+      - '  if (!selected) return;'
+      - '  if (isBodyless()) { pm.expect(responseText().trim().length).to.equal(0); return; }'
+      - '  var content = selected.value.content || {};'
+      - '  if (Object.keys(content).length === 0) { pm.expect(responseText().trim().length, "OpenAPI response defines no body but response body was not empty").to.equal(0); }'
+      - '  else { pm.expect(responseText().trim().length, "OpenAPI response defines a body but response body was empty").to.be.above(0); }'
+      - '});'
+      - pm.test('Content-Type matches OpenAPI response content', function () {
+      - '  if (!selected || isBodyless()) return;'
+      - '  var content = selected.value.content || {};'
+      - '  if (Object.keys(content).length === 0) return;'
+      - '  var actual = pm.response.headers.get("Content-Type");'
+      - '  if (!actual) pm.expect.fail("Content-Type <missing> does not match OpenAPI content for " + contract.method + " " + contract.path + " status " + pm.response.code + "; expected " + Object.keys(content).join(", "));'
+      - '  var media = selectMedia(selected.value);'
+      - '  if (media.error) pm.expect.fail(media.error);'
+      - '});'
+      - pm.test('Response body matches OpenAPI schema', function () {
+      - '  if (!selected || isBodyless()) return;'
+      - '  var content = selected.value.content || {};'
+      - '  if (Object.keys(content).length === 0) return;'
+      - '  var media = selectMedia(selected.value);'
+      - '  if (media.error) return;'
+      - '  if (media.media.unsupported) pm.expect.fail("OpenAPI schema unsupported for " + contract.method + " " + contract.path + " status " + pm.response.code + ": " + media.media.unsupported);'
+      - '  if (!media.media.schema) { return; }'
+      - '  var validate = validators[selected.key] && validators[selected.key][media.expected];'
+      - '  if (!validate) pm.expect.fail("OpenAPI schema validator was not generated for " + media.expected);'
+      - '  var actual = mediaParts(pm.response.headers.get("Content-Type") || "");'
+      - '  var value = isJsonSubtype(actual.subtype) ? pm.response.json() : responseText();'
+      - '  if (!isJsonSubtype(actual.subtype) && media.media.schema && media.media.schema.type !== "string") pm.expect.fail("Non-JSON response schema validation unsupported for " + contract.method + " " + contract.path);'
+      - '  if (!validate(value)) pm.expect.fail("OpenAPI schema validation failed for " + contract.method + " " + contract.path + " status " + pm.response.code + ": " + JSON.stringify(validate.errors || []));'
+      - '});'
+    language: text/javascript
+examples:
+  - response:
+      statusCode: 201
+      statusText: Created
+      body:
+        type: json
+        content: |-
+          {
+            "id": "string",
+            "applicationId": "string",
+            "documentType": "string",
+            "fileName": "string",
+            "uploadedAt": "1986-07-23T22:53:41.296Z",
+            "verificationStatus": "verified"
+          }
+      headers:
+        - key: Content-Type
+          value: application/json
+    name: Document uploaded successfully
+  - response:
+      statusCode: 400
+      statusText: Bad Request
+      body:
+        type: text
+        content: ''
+    name: Invalid document or unsupported format

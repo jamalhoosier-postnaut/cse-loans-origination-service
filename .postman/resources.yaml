@@ -1,0 +1,20 @@
+workspace:
+  id: 0b521a97-cf17-49b4-b567-09cd03c51189
+localResources:
+  collections:
+    - ../postman/collections/[Baseline] cse-loans-origination-service-v1
+    - ../postman/collections/[Smoke] cse-loans-origination-service-v1
+    - ../postman/collections/[Contract] cse-loans-origination-service-v1
+  environments:
+    - ../postman/environments/prod.postman_environment.json
+    - ../postman/environments/stage.postman_environment.json
+  specs:
+    - ../specs/openapi.yaml
+cloudResources:
+  collections:
+    ../postman/collections/[Baseline] cse-loans-origination-service-v1: 59128075-e203a1f1-a204-4d2e-af7a-af80c1101818
+    ../postman/collections/[Smoke] cse-loans-origination-service-v1: 59128075-c0342a37-5dda-4a59-ba10-97cd16291ad0
+    ../postman/collections/[Contract] cse-loans-origination-service-v1: 59128075-32c76fe9-f7e6-480a-8c44-3449e411a7c8
+  environments:
+    ../postman/environments/prod.postman_environment.json: 59128075-ab4d05bc-379b-416d-9667-a22dd2800fb5
+    ../postman/environments/stage.postman_environment.json: 59128075-abf12f09-8d22-4d42-9b0d-669d0a566916

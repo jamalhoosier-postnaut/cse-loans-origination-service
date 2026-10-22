@@ -1,0 +1,8 @@
+workflows:
+  syncSpecToCollection:
+    - spec: ../specs/openapi.yaml
+      collection: ../postman/collections/[Baseline] cse-loans-origination-service-v1
+    - spec: ../specs/openapi.yaml
+      collection: ../postman/collections/[Smoke] cse-loans-origination-service-v1
+    - spec: ../specs/openapi.yaml
+      collection: ../postman/collections/[Contract] cse-loans-origination-service-v1

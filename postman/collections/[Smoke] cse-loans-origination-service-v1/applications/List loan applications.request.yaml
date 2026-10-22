@@ -1,0 +1,88 @@
+type: http
+name: List loan applications
+url: '{{baseUrl}}/applications?status=under_review&productType=personal_loan&limit=25&offset=0'
+method: GET
+headers:
+  - key: Accept
+    value: application/json
+queryParams:
+  - key: status
+    value: under_review
+    description: Filter by application status
+  - key: productType
+    value: personal_loan
+    description: Filter by loan product type
+  - key: limit
+    value: '25'
+  - key: offset
+    value: '0'
+scripts:
+  - type: afterResponse
+    code:
+      - // [Smoke] Auto-generated test assertions
+      - pm.test('Status code is successful (2xx)', function () {
+      - '    pm.response.to.be.success;'
+      - '});'
+      - pm.test('Response time is acceptable', function () {
+      - '    var threshold = parseInt(pm.environment.get(''RESPONSE_TIME_THRESHOLD'') || ''2000'', 10);'
+      - '    pm.expect(pm.response.responseTime).to.be.below(threshold);'
+      - '});'
+      - pm.test('Response body is not empty', function () {
+      - '    if (pm.response.code !== 204) {'
+      - '        var body = pm.response.text();'
+      - '        pm.expect(body.length).to.be.above(0);'
+      - '    }'
+      - '});'
+    language: text/javascript
+examples:
+  - response:
+      statusCode: 200
+      statusText: OK
+      body:
+        type: json
+        content: |-
+          {
+            "data": [
+              {
+                "id": "string",
+                "applicantId": "string",
+                "productType": "string",
+                "requestedAmount": 1857.5198216053757,
+                "termMonths": 4272,
+                "status": "approved",
+                "createdAt": "2006-10-18T21:39:40.816Z",
+                "updatedAt": "1958-12-01T09:40:15.245Z",
+                "underwritingResult": {
+                  "applicationId": "string",
+                  "status": "failed",
+                  "decision": "referred_to_manual",
+                  "riskScore": 35,
+                  "evaluatedAt": "1961-05-21T21:29:08.007Z"
+                }
+              },
+              {
+                "id": "string",
+                "applicantId": "string",
+                "productType": "string",
+                "requestedAmount": 5274.277913601364,
+                "termMonths": 9405,
+                "status": "denied",
+                "createdAt": "1948-11-14T07:53:14.313Z",
+                "updatedAt": "2009-04-15T09:52:18.998Z",
+                "underwritingResult": {
+                  "applicationId": "string",
+                  "status": "completed",
+                  "decision": "approved",
+                  "riskScore": 5,
+                  "evaluatedAt": "1956-09-13T16:04:14.776Z"
+                }
+              }
+            ],
+            "total": 4010,
+            "limit": 7383,
+            "offset": 6490
+          }
+      headers:
+        - key: Content-Type
+          value: application/json
+    name: List of applications

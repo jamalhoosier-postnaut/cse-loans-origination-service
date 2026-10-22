@@ -1,0 +1,46 @@
+type: http
+name: Upload a document
+url: '{{baseUrl}}/applications/:applicationId/documents'
+method: POST
+headers:
+  - key: Content-Type
+    value: multipart/form-data
+  - key: Accept
+    value: application/json
+pathVariables:
+  - key: applicationId
+    value: string
+body:
+  type: formdata
+  content:
+    - key: file
+      type: file
+    - key: documentType
+      value: tax_return
+      type: text
+examples:
+  - response:
+      statusCode: 201
+      statusText: Created
+      body:
+        type: json
+        content: |-
+          {
+            "id": "string",
+            "applicationId": "string",
+            "documentType": "string",
+            "fileName": "string",
+            "uploadedAt": "1971-08-21T18:07:59.901Z",
+            "verificationStatus": "rejected"
+          }
+      headers:
+        - key: Content-Type
+          value: application/json
+    name: Document uploaded successfully
+  - response:
+      statusCode: 400
+      statusText: Bad Request
+      body:
+        type: text
+        content: ''
+    name: Invalid document or unsupported format
