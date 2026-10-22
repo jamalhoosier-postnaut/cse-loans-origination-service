@@ -29,7 +29,7 @@ jobs:
           domain-code: LEND
           requester-email: jamal.hoosier@postman.com
 
-          spec-url: https://raw.githubusercontent.com/jamal.hoosier-postnaut/cse-loans-origination-service/main/specs/openapi.yaml
+          spec-url: https://raw.githubusercontent.com/jamalhoosier-postnaut/cse-loans-origination-service/main/specs/openapi.yaml
 
           environments-json: '["prod","stage"]'
           system-env-map-json: '{}'
