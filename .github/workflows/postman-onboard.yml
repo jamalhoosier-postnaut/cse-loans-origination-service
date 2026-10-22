@@ -26,7 +26,7 @@ jobs:
           postman-api-key: ${{ secrets.POSTMAN_API_KEY }}
           postman-region: us
 
-      - name: Bootstrap (workspace + Spec Hub + collections + environments)
+      - name: Bootstrap (workspace + Spec Hub + collections)
         id: bootstrap
         uses: postman-cs/postman-bootstrap-action@v0
         with:
@@ -35,12 +35,10 @@ jobs:
           domain-code: LEND
           requester-email: jamal.hoosier@postman.com
           spec-url: https://raw.githubusercontent.com/jamalhoosier-postnaut/cse-loans-origination-service/main/specs/openapi.yaml
-          environments-json: '["prod","stage"]'
-          system-env-map-json: '{}'
           governance-mapping-json: '{}'
           postman-api-key: ${{ secrets.POSTMAN_API_KEY }}
           postman-access-token: ${{ steps.postman_token.outputs.token }}
-          github-token: ${{ secrets.GH_PAT }}
+          github-token: ${{ github.token }}
 
       - name: Repo Sync (export + mock + monitor)
         uses: postman-cs/postman-repo-sync-action@v0
@@ -55,4 +53,4 @@ jobs:
           generate-ci-workflow: false
           postman-api-key: ${{ secrets.POSTMAN_API_KEY }}
           postman-access-token: ${{ steps.postman_token.outputs.token }}
-          github-token: ${{ secrets.GH_PAT }}
+          github-token: ${{ github.token }}
